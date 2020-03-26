@@ -1,3 +1,4 @@
+import 'package:desktop/web/breadcrumb.dart';
 import 'package:desktop/widget/body.dart';
 import 'package:desktop/widget/header.dart';
 import 'package:desktop/widget/menu.dart';
@@ -64,7 +65,19 @@ class _HomePageState extends State<HomePage> {
     return Container(
       padding: EdgeInsets.all(16),
       width: showMenu ? size.width - menuWidth : size.width,
-      child: Body(),
+      child: Column(
+        children: <Widget>[
+          Container(
+            color: Colors.grey,
+            width: size.width,
+            height: 60,
+            child: BreadCrumb(),
+          ),
+          Expanded(
+            child: Body(),
+          ),
+        ],
+      ),
     );
   }
 }

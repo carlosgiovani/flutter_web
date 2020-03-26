@@ -1,8 +1,10 @@
 import 'package:desktop/pages/carros/carros.dart';
 import 'package:desktop/utils/web_utils.dart';
 import 'package:flutter/material.dart';
-
-import 'carros/carros_api.dart';
+import 'package:provider/provider.dart';
+import '../../app_model.dart';
+import 'carro_page.dart';
+import 'carros_api.dart';
 
 class CarrosPage extends StatefulWidget {
   @override
@@ -22,13 +24,13 @@ class _CarrosPageState extends State<CarrosPage> {
             );
           }
           List<Carro> carros = snapshot.data;
-          return _ListView(carros);
+          return _listView(carros);
         },
       ),
     );
   }
 
-  _ListView(List<Carro> carros) {
+  _listView(List<Carro> carros) {
     return GridView.builder(
       itemCount: carros.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -42,23 +44,31 @@ class _CarrosPageState extends State<CarrosPage> {
             double fontSize = size(constraints.maxWidth * 0.1);
             Carro carro = carros[index];
 
-            return Card(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Image.network(carro.urlFoto ??
-                      "http://www.livroandroid.com.br/livro/carros/esportivos/Porsche_Panamera.png"),
-                  Text(
-                    carro.nome ?? "",
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: fontSize),
-                  ),
-                ],
+            return InkWell(
+              onTap: () => _onClickCarro(carro),
+              child: Card(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.network(carro.urlFoto ??
+                        "http://www.livroandroid.com.br/livro/carros/esportivos/Porsche_Panamera.png"),
+                    Text(
+                      carro.nome ?? "",
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: fontSize),
+                    ),
+                  ],
+                ),
               ),
             );
           },
         );
       },
     );
+  }
+
+  _onClickCarro(Carro carro) {
+    AppModel app = Provider.of<AppModel>(context, listen: false);
+    app.push(PageInfo(carro.nome, CarroPage(carro)));
   }
 }
